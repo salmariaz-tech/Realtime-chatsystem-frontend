@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import JoinGroup from "./components/JoinGroup";
 import ChatRoom from "./components/ChatRoom";
-import "./App.css";
 import { io } from "socket.io-client";
+import "./App.css";
 
-// ✅ Railway Backend URL (No trailing slash!)
+// ✅ Use Railway backend URL (no trailing slash)
 const SOCKET_URL = "https://real-time-chat-backend-production-f1c0.up.railway.app";
 let socket;
 
@@ -14,18 +14,18 @@ function App() {
 
   useEffect(() => {
     socket = io(SOCKET_URL, {
-      transports: ["websocket", "polling"], // ✅ Fallback for Railway
+      transports: ["polling", "websocket"], // ✅ Fallback added
       reconnection: true,
-      reconnectionAttempts: 5,
-      timeout: 15000,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 2000,
     });
 
     socket.on("connect", () => {
-      console.log("✅ Connected to server:", socket.id);
+      console.log("✅ Connected to backend:", socket.id);
     });
 
     socket.on("disconnect", () => {
-      console.log("❌ Disconnected from server");
+      console.log("❌ Disconnected from backend");
     });
 
     return () => {
@@ -35,16 +35,12 @@ function App() {
 
   const handleJoin = ({ username, room }) => {
     setUserInfo({ username, room });
-    if (socket) {
-      socket.emit("join", room);
-    }
+    socket.emit("join", room);
     setJoined(true);
   };
 
   const handleLeave = () => {
-    if (socket) {
-      socket.emit("leave", userInfo.room);
-    }
+    socket.emit("leave", userInfo.room);
     setUserInfo({ username: "", room: "" });
     setJoined(false);
   };

@@ -4,7 +4,7 @@ import ChatRoom from "./components/ChatRoom";
 import "./App.css";
 import { io } from "socket.io-client";
 
-// ✅ Use Railway deployed backend URL (NO trailing slash)
+// ✅ Railway Backend URL (No trailing slash!)
 const SOCKET_URL = "https://real-time-chat-backend-production-f1c0.up.railway.app";
 let socket;
 
@@ -13,12 +13,11 @@ function App() {
   const [userInfo, setUserInfo] = useState({ username: "", room: "" });
 
   useEffect(() => {
-    // ✅ Add proper options to fix WebSocket issue
     socket = io(SOCKET_URL, {
-      transports: ["websocket", "polling"], // ✅ Force WebSocket first
-      reconnection: true, // ✅ Auto reconnect if connection drops
+      transports: ["websocket", "polling"], // ✅ Fallback for Railway
+      reconnection: true,
       reconnectionAttempts: 5,
-      timeout: 10000, // 10 sec timeout
+      timeout: 15000,
     });
 
     socket.on("connect", () => {

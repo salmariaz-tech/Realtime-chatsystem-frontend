@@ -4,7 +4,7 @@ import ChatRoom from "./components/ChatRoom";   // ✅ Corrected
 import "./App.css";
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "https://real-time-chat-backend-production-f1c0.up.railway.app/";
+const SOCKET_URL = "http://localhost:5050";
 let socket;
 
 function App() {

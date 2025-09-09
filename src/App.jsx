@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import JoinGroup from "./components/JoinGroup"; // ✅ Corrected
-import ChatRoom from "./components/ChatRoom";   // ✅ Corrected
+import JoinGroup from "./components/JoinGroup";
+import ChatRoom from "./components/ChatRoom";
 import "./App.css";
 import { io } from "socket.io-client";
 
-const SOCKET_URL = "https://real-time-chat-backend-production-f1c0.up.railway.app/";
+// ✅ Use deployed backend URL — NO trailing slash
+const SOCKET_URL = "https://real-time-chat-backend-production-f1c0.up.railway.app";
 let socket;
 
 function App() {
@@ -12,7 +13,9 @@ function App() {
   const [userInfo, setUserInfo] = useState({ username: "", room: "" });
 
   useEffect(() => {
-    socket = io(SOCKET_URL);
+    socket = io(SOCKET_URL, {
+      transports: ["websocket"], // ✅ Forces WebSocket for stability
+    });
 
     socket.on("connect", () => {
       console.log("✅ Connected to server");
@@ -36,6 +39,9 @@ function App() {
   };
 
   const handleLeave = () => {
+    if (socket) {
+      socket.emit("leave", userInfo.room);
+    }
     setUserInfo({ username: "", room: "" });
     setJoined(false);
   };

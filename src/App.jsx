@@ -4,7 +4,7 @@ import ChatRoom from "./components/ChatRoom";
 import { io } from "socket.io-client";
 import "./App.css";
 
-// ✅ Use Railway backend URL
+// ✅ Railway backend URL
 const SOCKET_URL = "https://real-time-chat-backend-production-f1c0.up.railway.app";
 let socket;
 
@@ -14,18 +14,16 @@ function App() {
 
   useEffect(() => {
     socket = io(SOCKET_URL, {
-      transports: ["polling", "websocket"], // ✅ Fallback added
-      reconnection: true,
-      reconnectionAttempts: 10,
-      reconnectionDelay: 2000,
+      transports: ["websocket", "polling"], // ✅ WebSocket + fallback polling
+      withCredentials: true,
     });
 
     socket.on("connect", () => {
-      console.log("✅ Connected to backend:", socket.id);
+      console.log("✅ Connected to server:", socket.id);
     });
 
     socket.on("disconnect", () => {
-      console.log("❌ Disconnected from backend");
+      console.log("❌ Disconnected from server");
     });
 
     return () => {

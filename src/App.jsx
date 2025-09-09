@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import JoinGroup from "./components/JoinGroup";
 import ChatRoom from "./components/ChatRoom";
-import { io } from "socket.io-client";
 import "./App.css";
+import { io } from "socket.io-client";
 
-// ✅ Railway backend URL
 const SOCKET_URL = "https://real-time-chat-backend-production-f1c0.up.railway.app";
 let socket;
 
@@ -14,7 +13,7 @@ function App() {
 
   useEffect(() => {
     socket = io(SOCKET_URL, {
-      transports: ["websocket", "polling"], // ✅ WebSocket + fallback polling
+      transports: ["websocket", "polling"], // ✅ Hybrid mode
       withCredentials: true,
     });
 
@@ -33,12 +32,13 @@ function App() {
 
   const handleJoin = ({ username, room }) => {
     setUserInfo({ username, room });
-    socket.emit("join", room);
+    if (socket) {
+      socket.emit("join", room);
+    }
     setJoined(true);
   };
 
   const handleLeave = () => {
-    socket.emit("leave", userInfo.room);
     setUserInfo({ username: "", room: "" });
     setJoined(false);
   };

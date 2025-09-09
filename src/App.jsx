@@ -4,7 +4,7 @@ import ChatRoom from "./components/ChatRoom";
 import { io } from "socket.io-client";
 import "./App.css";
 
-// ✅ Use Railway backend URL (no trailing slash)
+// ✅ Use Railway backend URL
 const SOCKET_URL = "https://real-time-chat-backend-production-f1c0.up.railway.app";
 let socket;
 
